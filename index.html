@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarriageWeb - Find Your Match</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gradient-to-br from-pink-50 via-rose-50 to-pink-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-2xl">
+        <!-- Progress Bar (hidden on landing page) -->
+        <div class="mb-8 hidden" id="progress-container">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-pink-600" id="progress-text">Step 1 of 8</span>
+                <span class="text-xs text-pink-400" id="progress-percent">12%</span>
+            </div>
+            <div class="w-full bg-pink-100 rounded-full h-2.5">
+                <div class="bg-gradient-to-r from-pink-400 to-rose-400 h-2.5 rounded-full transition-all duration-300" id="progress-bar" style="width: 12%"></div>
+            </div>
+        </div>
+
+        <!-- Step 0: Landing Page -->
+        <section id="step-0" class="step-section bg-white rounded-2xl shadow-2xl p-8 md:p-12 border-2 border-pink-200">
+            <div class="text-center">
+                <!-- Logo/Icon -->
+                <div class="mb-6">
+                    <div class="inline-block text-6xl mb-4">💕</div>
+                    <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent mb-3" style="line-height: 1.3; padding-bottom: 0.5rem; display: inline-block;">
+                        MarriageWeb
+                    </h1>
+                    <p class="text-xl text-pink-600 font-medium">Find Your Perfect Match</p>
+                </div>
+
+                <!-- Features -->
+                <div class="grid md:grid-cols-3 gap-4 mb-8 mt-10">
+                    <div class="p-4 bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl border border-pink-200">
+                        <div class="text-3xl mb-2">🎯</div>
+                        <h3 class="font-semibold text-pink-700 mb-1">Serious Intentions</h3>
+                        <p class="text-sm text-pink-600">For those seeking meaningful connections</p>
+                    </div>
+                    <div class="p-4 bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl border border-pink-200">
+                        <div class="text-3xl mb-2">✨</div>
+                        <h3 class="font-semibold text-pink-700 mb-1">Smart Matching</h3>
+                        <p class="text-sm text-pink-600">AI-powered compatibility analysis</p>
+                    </div>
+                    <div class="p-4 bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl border border-pink-200">
+                        <div class="text-3xl mb-2">🎉</div>
+                        <h3 class="font-semibold text-pink-700 mb-1">Social Events</h3>
+                        <p class="text-sm text-pink-600">Exclusive mixers and gatherings</p>
+                    </div>
+                </div>
+
+                <!-- Call to Action -->
+                <div class="mt-8">
+                    <button onclick="handleLandingPage()" 
+                            class="px-8 py-4 bg-gradient-to-r from-pink-400 to-rose-400 text-white text-lg font-semibold rounded-full hover:from-pink-500 hover:to-rose-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
+                        Get Started →
+                    </button>
+                </div>
+
+                <!-- Trust Indicators -->
+                <div class="mt-8 pt-6 border-t border-pink-200">
+                    <p class="text-sm text-pink-500">Join thousands finding their perfect match</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 1: Phone Registration -->
+        <section id="step-1" class="step-section hidden bg-white rounded-2xl shadow-lg p-8 border-2 border-pink-200">
+            <div class="text-center mb-6">
+                <h1 class="text-3xl font-bold text-pink-600 mb-2">Let's Get Started</h1>
+                <p class="text-pink-500">Enter your phone number to begin</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">Phone Number</label>
+                    <input type="tel" id="phone-number" placeholder="+1 (555) 123-4567" 
+                           class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                </div>
+                <button onclick="handleStep1()" 
+                        class="w-full bg-gradient-to-r from-pink-400 to-rose-400 text-white font-semibold py-3 rounded-lg hover:from-pink-500 hover:to-rose-500 transition-all duration-200 shadow-md hover:shadow-lg">
+                    Continue
+                </button>
+            </div>
+        </section>
+
+        <!-- Step 2: Sign In / Register -->
+        <section id="step-2" class="step-section hidden bg-white rounded-2xl shadow-lg p-8 border-2 border-pink-200">
+            <button onclick="goBack()" class="mb-4 text-pink-600 hover:text-pink-700 text-sm font-medium flex items-center gap-1">
+                ← Back
+            </button>
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-pink-600 mb-2">Create Your Account</h2>
+                <p class="text-pink-500">Enter your email address and create a password</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">Email Address</label>
+                    <input type="email" id="email-address" placeholder="your.email@example.com" 
+                           class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">Password</label>
+                    <input type="password" id="password" placeholder="Create a secure password" 
+                           class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                </div>
+                <div id="auth-message" class="text-sm text-center"></div>
+                <div class="flex gap-3">
+                    <button onclick="handleSignUp()" 
+                            class="flex-1 bg-gradient-to-r from-pink-400 to-rose-400 text-white font-semibold py-3 rounded-lg hover:from-pink-500 hover:to-rose-500 transition-all duration-200 shadow-md hover:shadow-lg">
+                        Sign Up
+                    </button>
+                    <button onclick="handleSignIn()" 
+                            class="flex-1 bg-gradient-to-r from-rose-300 to-pink-300 text-pink-700 font-semibold py-3 rounded-lg hover:from-rose-400 hover:to-pink-400 transition-all duration-200 shadow-md hover:shadow-lg">
+                        Sign In
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step 3: Basic Info -->
+        <section id="step-3" class="step-section hidden bg-white rounded-2xl shadow-lg p-8 border-2 border-pink-200">
+            <button onclick="goBack()" class="mb-4 text-pink-600 hover:text-pink-700 text-sm font-medium flex items-center gap-1">
+                ← Back
+            </button>
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-pink-600 mb-2">Tell Us About Yourself</h2>
+                <p class="text-pink-500">Just a few quick questions</p>
+            </div>
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-pink-700 mb-2">First Name</label>
+                        <input type="text" id="firstName" placeholder="First name" 
+                               class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-pink-700 mb-2">Last Name</label>
+                        <input type="text" id="lastName" placeholder="Last name" 
+                               class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">Gender</label>
+                    <select id="gender" 
+                            class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                        <option value="">Select...</option>
+                        <option value="Female">Female</option>
+                        <option value="Male">Male</option>
+                        <option value="Non-binary">Non-binary</option>
+                        <option value="Prefer not to say">Prefer not to say</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">Pronouns</label>
+                    <select id="pronouns" 
+                            class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                        <option value="">Select...</option>
+                        <option value="She/Her">She/Her</option>
+                        <option value="He/Him">He/Him</option>
+                        <option value="They/Them">They/Them</option>
+                        <option value="Prefer not to say">Prefer not to say</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">Age</label>
+                    <input type="number" id="age" placeholder="25" min="18" max="100" 
+                           class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">Nationality</label>
+                    <input type="text" id="nationality" placeholder="e.g., American" 
+                           class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">NYC Borough</label>
+                    <select id="borough" 
+                            class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                        <option value="">Select...</option>
+                        <option value="Manhattan">Manhattan</option>
+                        <option value="Brooklyn">Brooklyn</option>
+                        <option value="Queens">Queens</option>
+                        <option value="Bronx">Bronx</option>
+                        <option value="Staten Island">Staten Island</option>
+                    </select>
+                </div>
+                <button onclick="handleStep3()" 
+                        class="w-full bg-gradient-to-r from-pink-400 to-rose-400 text-white font-semibold py-3 rounded-lg hover:from-pink-500 hover:to-rose-500 transition-all duration-200 shadow-md hover:shadow-lg">
+                    Next
+                </button>
+            </div>
+        </section>
+
+        <!-- Step 4: School & Job -->
+        <section id="step-4" class="step-section hidden bg-white rounded-2xl shadow-lg p-8 border-2 border-pink-200">
+            <button onclick="goBack()" class="mb-4 text-pink-600 hover:text-pink-700 text-sm font-medium flex items-center gap-1">
+                ← Back
+            </button>
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-pink-600 mb-2">Education & Career</h2>
+                <p class="text-pink-500">Tell us about your background</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">University (Bachelors) (Optional)</label>
+                    <input type="text" id="school1" placeholder="e.g., New York University" 
+                           class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">Graduate School (Masters/PhD) (Optional)</label>
+                    <input type="text" id="school2" placeholder="e.g., Columbia University (if applicable)" 
+                           class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">Occupation</label>
+                    <input type="text" id="job" placeholder="e.g., Software Engineer, Student" 
+                           class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">Industry</label>
+                    <select id="industry" 
+                            class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                        <option value="">Select...</option>
+                        <option value="Tech">Tech</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Healthcare">Healthcare</option>
+                        <option value="Creative / Arts">Creative / Arts</option>
+                        <option value="Marketing / Business">Marketing / Business</option>
+                        <option value="Education">Education</option>
+                        <option value="Government">Government</option>
+                        <option value="Hospitality / Retail">Hospitality / Retail</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">Employment Type</label>
+                    <select id="employmentType" 
+                            class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                        <option value="">Select...</option>
+                        <option value="Full-Time">Full-Time</option>
+                        <option value="Part-Time">Part-Time</option>
+                        <option value="Student">Student</option>
+                        <option value="Intern">Intern</option>
+                        <option value="Self-Employed">Self-Employed</option>
+                        <option value="Looking for Work">Looking for Work</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">Are you currently studying or working?</label>
+                    <select id="studyWorkStatus" 
+                            class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                        <option value="">Select...</option>
+                        <option value="Studying">Studying</option>
+                        <option value="Working">Working</option>
+                        <option value="Both">Both</option>
+                        <option value="Neither">Neither</option>
+                    </select>
+                </div>
+                <button onclick="handleStep4()" 
+                        class="w-full bg-gradient-to-r from-pink-400 to-rose-400 text-white font-semibold py-3 rounded-lg hover:from-pink-500 hover:to-rose-500 transition-all duration-200 shadow-md hover:shadow-lg">
+                    Next
+                </button>
+            </div>
+        </section>
+
+        <!-- Step 4.5: More About You (Personality, Interests, Lifestyle) -->
+        <section id="step-4-5" class="step-section hidden bg-white rounded-2xl shadow-lg p-8 border-2 border-pink-200" style="overflow-y: auto; max-height: calc(100vh - 2rem);">
+            <button onclick="goBack()" class="mb-4 text-pink-600 hover:text-pink-700 text-sm font-medium flex items-center gap-1">
+                ← Back
+            </button>
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-pink-600 mb-2">More About You</h2>
+                <p class="text-pink-500">Personality, Interests & Lifestyle</p>
+            </div>
+            <div class="space-y-6">
+                <!-- Interests Section -->
+                <div>
+                    <h3 class="text-lg font-semibold text-pink-700 mb-3">Interests</h3>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-pink-700 mb-2">Select your interests (click to select multiple)</label>
+                        <div id="interests-tags" class="flex flex-wrap gap-2 mb-3">
+                            <span class="interest-tag px-4 py-2 rounded-full border-2 border-pink-200 text-pink-700 cursor-pointer hover:bg-pink-50 transition-colors" data-interest="Cooking">Cooking</span>
+                            <span class="interest-tag px-4 py-2 rounded-full border-2 border-pink-200 text-pink-700 cursor-pointer hover:bg-pink-50 transition-colors" data-interest="Gym / Fitness">Gym / Fitness</span>
+                            <span class="interest-tag px-4 py-2 rounded-full border-2 border-pink-200 text-pink-700 cursor-pointer hover:bg-pink-50 transition-colors" data-interest="Hiking">Hiking</span>
+                            <span class="interest-tag px-4 py-2 rounded-full border-2 border-pink-200 text-pink-700 cursor-pointer hover:bg-pink-50 transition-colors" data-interest="Travel">Travel</span>
+                            <span class="interest-tag px-4 py-2 rounded-full border-2 border-pink-200 text-pink-700 cursor-pointer hover:bg-pink-50 transition-colors" data-interest="Museums">Museums</span>
+                            <span class="interest-tag px-4 py-2 rounded-full border-2 border-pink-200 text-pink-700 cursor-pointer hover:bg-pink-50 transition-colors" data-interest="Reading">Reading</span>
+                            <span class="interest-tag px-4 py-2 rounded-full border-2 border-pink-200 text-pink-700 cursor-pointer hover:bg-pink-50 transition-colors" data-interest="Fashion">Fashion</span>
+                            <span class="interest-tag px-4 py-2 rounded-full border-2 border-pink-200 text-pink-700 cursor-pointer hover:bg-pink-50 transition-colors" data-interest="Tech / Coding">Tech / Coding</span>
+                            <span class="interest-tag px-4 py-2 rounded-full border-2 border-pink-200 text-pink-700 cursor-pointer hover:bg-pink-50 transition-colors" data-interest="Photography">Photography</span>
+                            <span class="interest-tag px-4 py-2 rounded-full border-2 border-pink-200 text-pink-700 cursor-pointer hover:bg-pink-50 transition-colors" data-interest="Music">Music</span>
+                            <span class="interest-tag px-4 py-2 rounded-full border-2 border-pink-200 text-pink-700 cursor-pointer hover:bg-pink-50 transition-colors" data-interest="Dance">Dance</span>
+                            <span class="interest-tag px-4 py-2 rounded-full border-2 border-pink-200 text-pink-700 cursor-pointer hover:bg-pink-50 transition-colors" data-interest="Gaming">Gaming</span>
+                            <span class="interest-tag px-4 py-2 rounded-full border-2 border-pink-200 text-pink-700 cursor-pointer hover:bg-pink-50 transition-colors" data-interest="Volunteering">Volunteering</span>
+                            <span class="interest-tag px-4 py-2 rounded-full border-2 border-pink-200 text-pink-700 cursor-pointer hover:bg-pink-50 transition-colors" data-interest="Meditation">Meditation</span>
+                            <span class="interest-tag px-4 py-2 rounded-full border-2 border-pink-200 text-pink-700 cursor-pointer hover:bg-pink-50 transition-colors" data-interest="Yoga">Yoga</span>
+                            <span class="interest-tag px-4 py-2 rounded-full border-2 border-pink-200 text-pink-700 cursor-pointer hover:bg-pink-50 transition-colors" data-interest="Cafe hopping">Cafe hopping</span>
+                            <span class="interest-tag px-4 py-2 rounded-full border-2 border-pink-200 text-pink-700 cursor-pointer hover:bg-pink-50 transition-colors" data-interest="Film / TV">Film / TV</span>
+                            <span class="interest-tag px-4 py-2 rounded-full border-2 border-pink-200 text-pink-700 cursor-pointer hover:bg-pink-50 transition-colors" data-interest="Concerts">Concerts</span>
+                            <span class="interest-tag px-4 py-2 rounded-full border-2 border-pink-200 text-pink-700 cursor-pointer hover:bg-pink-50 transition-colors" data-interest="Sports">Sports</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-pink-700 mb-2">What are 2–3 hobbies or interests you're most passionate about?</label>
+                        <textarea id="hobbies" rows="2" placeholder="e.g., Cooking, hiking, and photography" 
+                                  class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800 resize-none"></textarea>
+                    </div>
+                </div>
+
+                <!-- Personality Section -->
+                <div>
+                    <h3 class="text-lg font-semibold text-pink-700 mb-3">Personality Snapshot</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-pink-700 mb-2">MBTI (Optional)</label>
+                            <select id="mbti" 
+                                    class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                                <option value="">Select...</option>
+                                <option value="ENFP">ENFP</option>
+                                <option value="ENFJ">ENFJ</option>
+                                <option value="ENTP">ENTP</option>
+                                <option value="ENTJ">ENTJ</option>
+                                <option value="ESFP">ESFP</option>
+                                <option value="ESFJ">ESFJ</option>
+                                <option value="ESTP">ESTP</option>
+                                <option value="ESTJ">ESTJ</option>
+                                <option value="INFP">INFP</option>
+                                <option value="INFJ">INFJ</option>
+                                <option value="INTP">INTP</option>
+                                <option value="INTJ">INTJ</option>
+                                <option value="ISFP">ISFP</option>
+                                <option value="ISFJ">ISFJ</option>
+                                <option value="ISTP">ISTP</option>
+                                <option value="ISTJ">ISTJ</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-pink-700 mb-2">Communication Style</label>
+                            <select id="communicationStyle" 
+                                    class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                                <option value="">Select...</option>
+                                <option value="Direct">Direct</option>
+                                <option value="Warm">Warm</option>
+                                <option value="Reserved">Reserved</option>
+                                <option value="Go-with-the-flow">Go-with-the-flow</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-pink-700 mb-2">Humor Style</label>
+                            <select id="humorStyle" 
+                                    class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                                <option value="">Select...</option>
+                                <option value="Dry / sarcastic">Dry / sarcastic</option>
+                                <option value="Silly">Silly</option>
+                                <option value="Clever">Clever</option>
+                                <option value="Dark humor">Dark humor</option>
+                                <option value="Situational">Situational</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-pink-700 mb-2">Weekend Energy Level</label>
+                            <select id="energyLevel" 
+                                    class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                                <option value="">Select...</option>
+                                <option value="Very active">Very active</option>
+                                <option value="Balanced">Balanced</option>
+                                <option value="Low-key">Low-key</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Values & Life Goals Section -->
+                <div>
+                    <h3 class="text-lg font-semibold text-pink-700 mb-3">Values & Life Goals</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-pink-700 mb-2">What motivates you in life?</label>
+                            <textarea id="motivation" rows="2" placeholder="1-2 sentences" 
+                                      class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800 resize-none"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-pink-700 mb-2">What are you most proud of about yourself?</label>
+                            <textarea id="proudOf" rows="2" placeholder="Share something meaningful" 
+                                      class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800 resize-none"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-pink-700 mb-2">What are a few goals you're working toward?</label>
+                            <textarea id="goals" rows="2" placeholder="Your current goals" 
+                                      class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800 resize-none"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fun Questions Section -->
+                <div>
+                    <h3 class="text-lg font-semibold text-pink-700 mb-3">Fun Questions</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-pink-700 mb-2">What's a fun fact about you?</label>
+                            <textarea id="funFact" rows="2" placeholder="Something interesting or unique" 
+                                      class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800 resize-none"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-pink-700 mb-2">Pet peeves?</label>
+                            <textarea id="petPeeves" rows="2" placeholder="What bothers you?" 
+                                      class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800 resize-none"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-pink-700 mb-2">What makes a relationship last? (Optional)</label>
+                            <textarea id="relationshipPhilosophy" rows="3" placeholder="Your thoughts on lasting relationships" 
+                                      class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800 resize-none"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="handleStep4_5()" 
+                        class="w-full bg-gradient-to-r from-pink-400 to-rose-400 text-white font-semibold py-3 rounded-lg hover:from-pink-500 hover:to-rose-500 transition-all duration-200 shadow-md hover:shadow-lg">
+                    Next
+                </button>
+            </div>
+        </section>
+
+        <!-- Step 5: Relationship Intent -->
+        <section id="step-5" class="step-section hidden bg-white rounded-2xl shadow-lg p-8 border-2 border-pink-200" style="overflow-y: auto; max-height: calc(100vh - 2rem);">
+            <button onclick="goBack()" class="mb-4 text-pink-600 hover:text-pink-700 text-sm font-medium flex items-center gap-1">
+                ← Back
+            </button>
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-pink-600 mb-2">What Are You Looking For?</h2>
+                <p class="text-pink-500">Share your relationship goals</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">In one sentence, what are you looking for in a relationship right now?</label>
+                    <textarea id="relationship-intent" rows="4" placeholder="e.g., I'm looking for a serious, long-term relationship that could lead to marriage..." 
+                              class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800 resize-none"></textarea>
+                </div>
+                <div id="analysis-result" class="hidden mt-4">
+                    <div id="analysis-content" class="space-y-4"></div>
+                    <button type="button" onclick="goToStep5_5()" 
+                            class="w-full mt-4 bg-gradient-to-r from-pink-400 to-rose-400 text-white font-semibold py-3 rounded-lg hover:from-pink-500 hover:to-rose-500 transition-all duration-200 shadow-md hover:shadow-lg">
+                        Continue to Next Step
+                    </button>
+                </div>
+                <button type="button" onclick="handleStep5()" 
+                        class="w-full bg-gradient-to-r from-pink-400 to-rose-400 text-white font-semibold py-3 rounded-lg hover:from-pink-500 hover:to-rose-500 transition-all duration-200 shadow-md hover:shadow-lg">
+                    Analyze & Continue
+                </button>
+            </div>
+        </section>
+
+        <!-- Step 5.5: Personality Questionnaire -->
+        <section id="step-5-5" class="step-section hidden bg-white rounded-2xl shadow-lg p-8 border-2 border-pink-200">
+            <button onclick="goBack()" class="mb-4 text-pink-600 hover:text-pink-700 text-sm font-medium flex items-center gap-1">
+                ← Back
+            </button>
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-pink-600 mb-2">🧠 Personality Compatibility Assessment</h2>
+                <p class="text-pink-500">Help us understand your personality to find your best match</p>
+            </div>
+            <div class="space-y-6">
+                <!-- Communication Style -->
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">How do you prefer to communicate in relationships?</label>
+                    <select id="communication-style" 
+                            class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                        <option value="">Select...</option>
+                        <option value="Direct">Direct and straightforward</option>
+                        <option value="Diplomatic">Diplomatic and considerate</option>
+                        <option value="Expressive">Expressive and emotional</option>
+                        <option value="Analytical">Analytical and logical</option>
+                    </select>
+                </div>
+
+                <!-- Conflict Resolution -->
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">How do you handle conflicts or disagreements?</label>
+                    <select id="conflict-resolution" 
+                            class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                        <option value="">Select...</option>
+                        <option value="Address Immediately">Address issues immediately and directly</option>
+                        <option value="Take Time">Take time to process before discussing</option>
+                        <option value="Compromise">Seek compromise and middle ground</option>
+                        <option value="Avoid">Prefer to avoid conflict when possible</option>
+                    </select>
+                </div>
+
+                <!-- Love Language -->
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">What makes you feel most loved and appreciated?</label>
+                    <select id="love-language" 
+                            class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                        <option value="">Select...</option>
+                        <option value="Words of Affirmation">Words of affirmation and verbal appreciation</option>
+                        <option value="Quality Time">Quality time and undivided attention</option>
+                        <option value="Acts of Service">Acts of service and helpful gestures</option>
+                        <option value="Physical Touch">Physical touch and affection</option>
+                        <option value="Gifts">Thoughtful gifts and gestures</option>
+                    </select>
+                </div>
+
+                <!-- Social Energy -->
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">How do you recharge your energy?</label>
+                    <select id="social-energy" 
+                            class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                        <option value="">Select...</option>
+                        <option value="Introvert">Alone time (Introvert)</option>
+                        <option value="Ambivert">Mix of alone time and socializing (Ambivert)</option>
+                        <option value="Extrovert">Socializing with others (Extrovert)</option>
+                    </select>
+                </div>
+
+                <!-- Decision Making -->
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">How do you typically make important decisions?</label>
+                    <select id="decision-making" 
+                            class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                        <option value="">Select...</option>
+                        <option value="Intuitive">Follow intuition and gut feelings</option>
+                        <option value="Analytical">Analyze pros and cons carefully</option>
+                        <option value="Collaborative">Discuss with others before deciding</option>
+                        <option value="Spontaneous">Make quick decisions in the moment</option>
+                    </select>
+                </div>
+
+                <button onclick="handlePersonalityQuestionnaire()" 
+                        class="w-full bg-gradient-to-r from-pink-400 to-rose-400 text-white font-semibold py-3 rounded-lg hover:from-pink-500 hover:to-rose-500 transition-all duration-200 shadow-md hover:shadow-lg">
+                    Continue
+                </button>
+            </div>
+        </section>
+
+        <!-- Step Financial Profile: Financial Personality & Habits -->
+        <section id="step-financial-profile" class="step-section hidden bg-white rounded-2xl shadow-lg p-8 border-2 border-pink-200" style="overflow-y: auto; max-height: calc(100vh - 2rem);">
+            <button onclick="goBack()" class="mb-4 text-pink-600 hover:text-pink-700 text-sm font-medium flex items-center gap-1">
+                ← Back
+            </button>
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-pink-600 mb-2">💰 Financial Personality & Habits</h2>
+                <p class="text-pink-500">Help us understand your financial values and habits</p>
+            </div>
+            <div class="space-y-6">
+                <!-- A. Basic Financial Snapshot -->
+                <div>
+                    <h3 class="text-lg font-semibold text-pink-700 mb-3">Basic Financial Snapshot</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-pink-700 mb-2">Annual Income</label>
+                            <select id="incomeBracket" 
+                                    class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                                <option value="">Select...</option>
+                                <option value="< $30k">< $30k</option>
+                                <option value="$30k–50k">$30k–50k</option>
+                                <option value="$50k–80k">$50k–80k</option>
+                                <option value="$80k–120k">$80k–120k</option>
+                                <option value="$120k–200k">$120k–200k</option>
+                                <option value="$200k+">$200k+</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-pink-700 mb-2">Savings Range</label>
+                            <select id="savingsRange" 
+                                    class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                                <option value="">Select...</option>
+                                <option value="< $1k">< $1k</option>
+                                <option value="$1k–$5k">$1k–$5k</option>
+                                <option value="$5k–$20k">$5k–$20k</option>
+                                <option value="$20k–$50k">$20k–$50k</option>
+                                <option value="$50k+">$50k+</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-pink-700 mb-2">Debt Type (Select all that apply)</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-2">
+                                    <input type="checkbox" value="Student loans" class="debt-checkbox rounded border-pink-300 text-pink-600 focus:ring-pink-500">
+                                    <span class="text-pink-700 text-sm">Student loans</span>
+                                </label>
+                                <label class="flex items-center gap-2">
+                                    <input type="checkbox" value="Credit card debt" class="debt-checkbox rounded border-pink-300 text-pink-600 focus:ring-pink-500">
+                                    <span class="text-pink-700 text-sm">Credit card debt</span>
+                                </label>
+                                <label class="flex items-center gap-2">
+                                    <input type="checkbox" value="Car payments" class="debt-checkbox rounded border-pink-300 text-pink-600 focus:ring-pink-500">
+                                    <span class="text-pink-700 text-sm">Car payments</span>
+                                </label>
+                                <label class="flex items-center gap-2">
+                                    <input type="checkbox" value="No debt" class="debt-checkbox rounded border-pink-300 text-pink-600 focus:ring-pink-500">
+                                    <span class="text-pink-700 text-sm">No debt</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-pink-700 mb-2">Debt Amount (Optional)</label>
+                            <input type="text" id="debtAmount" placeholder="e.g., $15,000" 
+                                   class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- B. Financial Habits -->
+                <div>
+                    <h3 class="text-lg font-semibold text-pink-700 mb-3">Financial Habits</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-pink-700 mb-2">How would you describe your spending style?</label>
+                            <select id="spendingStyle" 
+                                    class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                                <option value="">Select...</option>
+                                <option value="Frugal">Frugal</option>
+                                <option value="Balanced">Balanced</option>
+                                <option value="Occasional splurger">Occasional splurger</option>
+                                <option value="High-spender">High-spender</option>
+                                <option value="Impulsive">Impulsive</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-pink-700 mb-2">What's your monthly 'fun spending' budget?</label>
+                            <select id="funBudget" 
+                                    class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                                <option value="">Select...</option>
+                                <option value="$0–$100">$0–$100</option>
+                                <option value="$100–300">$100–300</option>
+                                <option value="$300–600">$300–600</option>
+                                <option value="$600–1000">$600–1000</option>
+                                <option value="$1000+">$1000+</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-pink-700 mb-2">How do you feel about splitting dates?</label>
+                            <select id="datePayPreference" 
+                                    class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                                <option value="">Select...</option>
+                                <option value="Always 50/50">Always 50/50</option>
+                                <option value="Whoever initiates pays">Whoever initiates pays</option>
+                                <option value="I prefer traditional roles">I prefer traditional roles</option>
+                                <option value="Flexible">Flexible</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-pink-700 mb-2">Long-term financial goal?</label>
+                            <input type="text" id="financialGoal" placeholder="e.g., Buy a home, travel, early retirement" 
+                                   class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- C. Attitudes Toward Money -->
+                <div>
+                    <h3 class="text-lg font-semibold text-pink-700 mb-3">Attitudes Toward Money</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-pink-700 mb-2">Are you financially cautious or risk-taking?</label>
+                            <select id="riskTolerance" 
+                                    class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                                <option value="">Select...</option>
+                                <option value="Very cautious">Very cautious</option>
+                                <option value="Cautious">Cautious</option>
+                                <option value="Moderate">Moderate</option>
+                                <option value="Risk-tolerant">Risk-tolerant</option>
+                                <option value="Very risk-taking">Very risk-taking</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-pink-700 mb-2">How important is financial stability in a partner?</label>
+                            <select id="importanceStability" 
+                                    class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                                <option value="">Select...</option>
+                                <option value="Not very">Not very</option>
+                                <option value="Somewhat important">Somewhat important</option>
+                                <option value="Important">Important</option>
+                                <option value="Very important">Very important</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- D. Values-Based -->
+                <div>
+                    <h3 class="text-lg font-semibold text-pink-700 mb-3">Values-Based</h3>
+                    <div>
+                        <label class="block text-sm font-medium text-pink-700 mb-2">What does financial compatibility mean to you?</label>
+                        <textarea id="financialPhilosophy" rows="3" placeholder="1-2 sentences about what financial compatibility means to you" 
+                                  class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800 resize-none"></textarea>
+                    </div>
+                </div>
+
+                <button onclick="handleFinancialProfile()" 
+                        class="w-full bg-gradient-to-r from-pink-400 to-rose-400 text-white font-semibold py-3 rounded-lg hover:from-pink-500 hover:to-rose-500 transition-all duration-200 shadow-md hover:shadow-lg">
+                    Next
+                </button>
+            </div>
+        </section>
+
+        <!-- Step AI Profile: AI-Generated Profile Review -->
+        <section id="step-ai-profile" class="step-section hidden bg-white rounded-2xl shadow-lg p-8 border-2 border-pink-200" style="overflow-y: auto; max-height: calc(100vh - 2rem);">
+            <button onclick="goBack()" class="mb-4 text-pink-600 hover:text-pink-700 text-sm font-medium flex items-center gap-1">
+                ← Back
+            </button>
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-pink-600 mb-2">✨ Your AI-Generated Profile</h2>
+                <p class="text-pink-500">Review and edit your profile before continuing</p>
+            </div>
+            <div class="space-y-4">
+                <div id="ai-profile-loading" class="hidden text-center py-4">
+                    <p class="text-pink-600">Generating your profile...</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">Your Dating Profile</label>
+                    <textarea id="aiProfileText" rows="16" placeholder="Your AI-generated profile will appear here..." 
+                              class="w-full h-64 px-4 py-3 rounded-xl border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800 resize-none"></textarea>
+                </div>
+                
+                <!-- Voice Recording Section -->
+                <div class="mt-6 p-4 bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl border-2 border-pink-200">
+                    <h3 class="font-semibold text-pink-700 mb-3">🎙️ Optional Voice Introduction (1 minute max)</h3>
+                    <div class="flex items-center gap-3 mb-3">
+                        <button id="recordBtn" onclick="startRecording()" 
+                                class="bg-gradient-to-r from-pink-400 to-rose-400 text-white px-6 py-2 rounded-lg hover:from-pink-500 hover:to-rose-500 transition-all duration-200 font-semibold shadow-md">
+                            🎤 Start Recording
+                        </button>
+                        <button id="stopBtn" onclick="stopRecording()" 
+                                class="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400 transition-all duration-200 font-semibold" disabled>
+                            ⏹️ Stop Recording
+                        </button>
+                    </div>
+                    <div id="recording-timer" class="hidden text-pink-600 text-sm font-medium mb-2">
+                        Recording: <span id="timer-display">0:00</span>
+                    </div>
+                    <div id="voice-preview-container" class="hidden mt-4">
+                        <audio id="voicePreview" controls class="w-full mb-3"></audio>
+                        <div class="flex gap-3">
+                            <button onclick="saveVoiceRecording()" 
+                                    class="flex-1 bg-gradient-to-r from-green-400 to-green-500 text-white px-4 py-2 rounded-lg hover:from-green-500 hover:to-green-600 transition-all duration-200 font-semibold shadow-md">
+                                ✅ Save Recording
+                            </button>
+                            <button onclick="deleteVoiceRecording()" 
+                                    class="flex-1 bg-gradient-to-r from-red-400 to-red-500 text-white px-4 py-2 rounded-lg hover:from-red-500 hover:to-red-600 transition-all duration-200 font-semibold shadow-md">
+                                🗑️ Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <button onclick="handleAIProfile()" 
+                        class="w-full bg-gradient-to-r from-pink-400 to-rose-400 text-white font-semibold py-3 rounded-lg hover:from-pink-500 hover:to-rose-500 transition-all duration-200 shadow-md hover:shadow-lg">
+                    Save & Continue
+                </button>
+            </div>
+        </section>
+
+        <!-- Step 7: For You Page -->
+        <section id="step-7" class="step-section hidden bg-white rounded-2xl shadow-lg p-8 border-2 border-pink-200">
+            <button onclick="goBack()" class="mb-4 text-pink-600 hover:text-pink-700 text-sm font-medium flex items-center gap-1">
+                ← Back
+            </button>
+            <div class="text-center mb-6">
+                <h2 class="text-3xl font-bold text-pink-600 mb-2">💖 Your For You Page</h2>
+                <p class="text-pink-500">Discover matches and events</p>
+            </div>
+
+            <!-- Proactive Suggestion -->
+            <div id="proactive-suggestion" class="mb-8"></div>
+            
+            <!-- Funny Hack Features -->
+            <div class="mb-8 p-6 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border-2 border-yellow-200">
+                <h3 class="text-xl font-semibold text-orange-700 mb-4">🎭 Fun AI Features</h3>
+                <div class="space-y-3">
+                    <button onclick="showFinancialRedFlags()" 
+                            class="w-full bg-gradient-to-r from-yellow-400 to-orange-400 text-white font-semibold py-2 rounded-lg hover:from-yellow-500 hover:to-orange-500 transition-all duration-200 shadow-md">
+                        💸 Financial Red Flags Detector
+                    </button>
+                    <button onclick="showRelationshipDuration()" 
+                            class="w-full bg-gradient-to-r from-orange-400 to-pink-400 text-white font-semibold py-2 rounded-lg hover:from-orange-500 hover:to-pink-500 transition-all duration-200 shadow-md">
+                        ⏰ How Long Will This Relationship Last?
+                    </button>
+                </div>
+                <div id="funny-hack-result" class="mt-4 hidden p-4 bg-white rounded-lg border-2 border-orange-200">
+                    <p class="text-orange-800"></p>
+                </div>
+            </div>
+            
+            <!-- Model Routing Strategy Page Link -->
+            <div class="mb-8 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border-2 border-blue-200">
+                <button onclick="goToStep('model-routing')" 
+                        class="w-full text-blue-700 font-semibold py-2 hover:text-blue-800 transition-all duration-200">
+                    🔧 View AI Model Routing Strategy
+                </button>
+            </div>
+
+            <!-- Matches Section -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-pink-700 mb-4">People that match you</h3>
+                <div id="matches-container" class="space-y-4">
+                    <!-- Matches will be dynamically generated here -->
+                </div>
+            </div>
+
+            <!-- Social Event RSVP -->
+            <div class="mb-8 p-6 bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl border-2 border-pink-200">
+                <h3 class="text-xl font-semibold text-pink-700 mb-2">Social Event RSVP</h3>
+                <p class="text-pink-600 mb-4">Upcoming Social Mixer — No Financial Screening Required</p>
+                <p class="text-sm text-pink-500 mb-4">$20 per person — join other people looking for serious relationships in your city.</p>
+                <div id="rsvp-message" class="hidden mb-4 p-3 bg-pink-100 rounded-lg text-pink-700 text-sm">
+                    You're in! See you there 🥂
+                </div>
+                <button onclick="handleRSVP()" id="rsvp-button"
+                        class="w-full bg-gradient-to-r from-pink-400 to-rose-400 text-white font-semibold py-3 rounded-lg hover:from-pink-500 hover:to-rose-500 transition-all duration-200 shadow-md hover:shadow-lg mb-3">
+                    RSVP for $20
+                </button>
+                <button onclick="showMarketplace()" 
+                        class="w-full bg-gradient-to-r from-rose-300 to-pink-300 text-pink-700 font-semibold py-3 rounded-lg hover:from-rose-400 hover:to-pink-400 transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                    <span>💕</span>
+                    <span>AI Price Negotiation</span>
+                </button>
+            </div>
+
+        </section>
+
+        <!-- Step Match Profile: Individual Match Profile Page -->
+        <section id="step-match-profile" class="step-section hidden bg-white rounded-2xl shadow-lg p-8 border-2 border-pink-200" style="overflow-y: auto; max-height: calc(100vh - 2rem);">
+            <button onclick="goBack()" class="mb-4 text-pink-600 hover:text-pink-700 text-sm font-medium flex items-center gap-1">
+                ← Back
+            </button>
+            <div class="text-center mb-6">
+                <div class="w-32 h-32 mx-auto mb-4 bg-gradient-to-r from-pink-200 to-rose-200 rounded-full flex items-center justify-center text-4xl text-pink-600">
+                    👤
+                </div>
+                <h2 id="match-profile-name" class="text-2xl font-bold text-pink-600 mb-2"></h2>
+                <p id="match-profile-age-borough" class="text-pink-500"></p>
+            </div>
+            <div class="space-y-4">
+                <div class="bg-pink-50 rounded-lg p-4 border-2 border-pink-200">
+                    <h3 class="font-semibold text-pink-700 mb-2">Education & Occupation</h3>
+                    <p id="match-profile-education" class="text-pink-600 text-sm"></p>
+                    <p id="match-profile-occupation" class="text-pink-600 text-sm"></p>
+                </div>
+                <div class="bg-pink-50 rounded-lg p-4 border-2 border-pink-200">
+                    <h3 class="font-semibold text-pink-700 mb-2">Relationship Style</h3>
+                    <p id="match-profile-intent" class="text-pink-600 text-sm"></p>
+                </div>
+                <div class="bg-pink-50 rounded-lg p-4 border-2 border-pink-200">
+                    <h3 class="font-semibold text-pink-700 mb-2">Core Values</h3>
+                    <div id="match-profile-values" class="flex flex-wrap gap-2 mt-2"></div>
+                </div>
+                <div class="bg-pink-50 rounded-lg p-4 border-2 border-pink-200">
+                    <h3 class="font-semibold text-pink-700 mb-2">MBTI</h3>
+                    <p id="match-profile-mbti" class="text-pink-600 text-sm"></p>
+                </div>
+                <div class="bg-pink-50 rounded-lg p-4 border-2 border-pink-200">
+                    <h3 class="font-semibold text-pink-700 mb-2">Fun Facts</h3>
+                    <p id="match-profile-fun-facts" class="text-pink-600 text-sm"></p>
+                </div>
+                <div class="bg-blue-50 rounded-lg p-4 border-2 border-blue-200">
+                    <h3 class="font-semibold text-blue-700 mb-2">✨ Why You Matched</h3>
+                    <p id="match-profile-explanation" class="text-blue-600 text-sm">Analyzing compatibility...</p>
+                </div>
+                <div class="bg-purple-50 rounded-lg p-4 border-2 border-purple-200">
+                    <h3 class="font-semibold text-purple-700 mb-2">💬 Good Conversation Starter</h3>
+                    <p id="match-profile-conversation-starter" class="text-purple-600 text-sm">Generating conversation ideas...</p>
+                </div>
+                <div class="bg-green-50 rounded-lg p-4 border-2 border-green-200">
+                    <h3 class="font-semibold text-green-700 mb-2">Shared Interests & Values</h3>
+                    <div id="match-profile-shared" class="flex flex-wrap gap-2 mt-2"></div>
+                </div>
+                <div id="match-voice-intro-section" class="bg-purple-50 rounded-lg p-4 border-2 border-purple-200 hidden">
+                    <h3 class="font-semibold text-purple-700 mb-2">🎧 Voice Introduction</h3>
+                    <audio id="matchVoiceIntro" controls class="w-full mt-2"></audio>
+                </div>
+                <button onclick="startChatWithMatch()" 
+                        class="w-full bg-gradient-to-r from-pink-400 to-rose-400 text-white font-semibold py-3 rounded-lg hover:from-pink-500 hover:to-rose-500 transition-all duration-200 shadow-md hover:shadow-lg">
+                    Start Chat
+                </button>
+            </div>
+        </section>
+
+        <!-- Step Chat: Chat Room -->
+        <section id="step-chat" class="step-section hidden bg-white rounded-2xl shadow-lg border-2 border-pink-200 flex flex-col relative" style="height: calc(100vh - 2rem); max-height: calc(100vh - 2rem);">
+            <div class="p-4 border-b-2 border-pink-200 flex items-center gap-3">
+                <button onclick="goBack()" class="text-pink-600 hover:text-pink-700 text-sm font-medium flex items-center gap-1">
+                    ← Back
+                </button>
+                <h2 id="chat-header-name" class="text-xl font-bold text-pink-600 flex-1">Chat</h2>
+            </div>
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+                <!-- Messages will be dynamically added here -->
+            </div>
+            <div class="p-4 border-t-2 border-pink-200 flex gap-2">
+                <input type="text" id="chat-input" placeholder="Type a message..." 
+                       class="flex-1 px-4 py-2 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800"
+                       onkeypress="if(event.key === 'Enter') sendChatMessage()">
+                <button onclick="sendChatMessage()" 
+                        class="px-6 py-2 bg-gradient-to-r from-pink-400 to-rose-400 text-white font-semibold rounded-lg hover:from-pink-500 hover:to-rose-500 transition-all duration-200">
+                    Send
+                </button>
+            </div>
+            
+            <!-- AI Assistant Button (Floating) -->
+            <button id="ai-assistant-button" onclick="toggleAIAssistant()" 
+                    class="hidden fixed bottom-24 right-8 w-14 h-14 bg-gradient-to-r from-pink-400 to-rose-400 text-white rounded-full shadow-lg hover:from-pink-500 hover:to-rose-500 transition-all duration-200 flex items-center justify-center text-2xl z-40">
+                💕
+            </button>
+            
+            <!-- AI Assistant Panel (Hidden by default) -->
+            <div id="ai-assistant-panel" class="hidden fixed right-0 top-0 h-full w-96 bg-white border-l-2 border-pink-200 shadow-2xl z-50 flex flex-col">
+                <div class="p-4 border-b-2 border-pink-200 flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-pink-600">💕 AI Date Planner</h3>
+                    <button onclick="toggleAIAssistant()" class="text-pink-600 hover:text-pink-700 text-xl">×</button>
+                </div>
+                <div id="ai-assistant-messages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+                    <div class="bg-gradient-to-r from-pink-50 to-rose-50 border-2 border-pink-200 rounded-lg p-4">
+                        <p class="text-sm text-pink-800 font-medium">💕 Hi! I'm your AI date planning assistant. I can help you plan amazing dates based on your shared interests, budgets, and personalities. What kind of date are you looking for?</p>
+                    </div>
+                </div>
+                <div class="p-4 border-t-2 border-pink-200 flex gap-2">
+                    <input type="text" id="ai-assistant-input" placeholder="Ask about date ideas..." 
+                           class="flex-1 px-4 py-2 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800"
+                           onkeypress="if(event.key === 'Enter') sendAssistantMessage()">
+                    <button onclick="sendAssistantMessage()" 
+                            class="px-6 py-2 bg-gradient-to-r from-blue-400 to-blue-500 text-white font-semibold rounded-lg hover:from-blue-500 hover:to-blue-600 transition-all duration-200">
+                        Send
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Step Date Planner: Date Recommendations -->
+        <section id="step-date-planner" class="step-section hidden bg-white rounded-2xl shadow-lg p-8 border-2 border-pink-200" style="overflow-y: auto; max-height: calc(100vh - 2rem);">
+            <button onclick="goBack()" class="mb-4 text-pink-600 hover:text-pink-700 text-sm font-medium flex items-center gap-1">
+                ← Back
+            </button>
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-pink-600 mb-2">💕 Personalized Date Ideas</h2>
+                <p class="text-pink-500">AI-generated date plans just for you two</p>
+            </div>
+            <div id="date-ideas-container" class="space-y-4">
+                <div class="text-center py-8">
+                    <p class="text-pink-600">Generating personalized date ideas...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chemistry Detection Popup -->
+        <div id="chemistry-popup" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md mx-4 border-2 border-pink-200">
+                <h3 class="text-xl font-bold text-pink-600 mb-2">✨ Great Chemistry Detected!</h3>
+                <p class="text-pink-600 mb-4">It looks like your conversation is going well! Would you like a personalized date plan for the two of you?</p>
+                <div class="flex gap-3">
+                    <button onclick="handleChemistryYes()" 
+                            class="flex-1 bg-gradient-to-r from-pink-400 to-rose-400 text-white font-semibold py-2 rounded-lg hover:from-pink-500 hover:to-rose-500 transition-all duration-200">
+                        ✔ Yes
+                    </button>
+                    <button onclick="handleChemistryNo()" 
+                            class="flex-1 bg-gray-200 text-gray-700 font-semibold py-2 rounded-lg hover:bg-gray-300 transition-all duration-200">
+                        ✖ No
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Marketplace Section: AI Event Negotiation (Visa Challenge Simulation) -->
+        <section id="marketplace-section" class="step-section hidden bg-white rounded-2xl shadow-lg p-8 border-2 border-pink-200">
+            <button onclick="goBackToForYou()" class="mb-4 text-pink-600 hover:text-pink-700 text-sm font-medium flex items-center gap-1">
+                ← Back to For You Page
+            </button>
+            <div class="text-center mb-6">
+                <h2 class="text-3xl font-bold text-pink-600 mb-2">💕 AI Event Negotiation</h2>
+                <p class="text-pink-500">Visa Challenge Simulation - Negotiate with AI Agents</p>
+            </div>
+
+            <div class="mb-6 p-4 bg-pink-50 rounded-xl border border-pink-200">
+                <h3 class="font-semibold text-pink-700 mb-2">💖 Your Autonomous Buyer Agent</h3>
+                <p class="text-sm text-pink-600">Budget: <span id="buyer-budget" class="font-semibold">$20</span></p>
+                <p class="text-sm text-pink-600">Max Budget: <span id="buyer-max-budget" class="font-semibold">$50</span></p>
+                <p class="text-sm text-pink-600">Location: <span id="buyer-location" class="font-semibold">New York</span></p>
+                <p class="text-sm text-pink-600">Strategy: <span id="buyer-strategy" class="font-semibold">Autonomous Negotiation</span></p>
+                <p class="text-xs text-pink-500 mt-2">The buyer agent will negotiate with all sellers autonomously and select the best deal.</p>
+            </div>
+            
+            <div class="mb-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
+                <h3 class="font-semibold text-blue-700 mb-2">🏪 Available Sellers</h3>
+                <div class="space-y-2 text-sm text-blue-600">
+                    <p>• <strong>BudgetDateBot</strong> - Budget events ($35 base)</p>
+                    <p>• <strong>LuxuryEventsBot</strong> - Premium experiences ($150 base)</p>
+                    <p>• <strong>ArtSellerBot</strong> - Cultural events ($60 base)</p>
+                </div>
+            </div>
+
+            <button onclick="startNegotiation()" id="start-negotiation-btn"
+                    class="w-full mb-6 bg-gradient-to-r from-pink-400 to-rose-400 text-white font-semibold py-3 rounded-lg hover:from-pink-500 hover:to-rose-500 transition-all duration-200 shadow-md hover:shadow-lg">
+                Start Negotiation
+            </button>
+
+            <!-- Negotiation Transcript -->
+            <div id="negotiation-transcript" class="hidden space-y-4 mb-6 max-h-96 overflow-y-auto p-4 bg-gray-50 rounded-xl border border-gray-200">
+                <!-- Messages will be dynamically added here -->
+            </div>
+
+            <!-- Negotiation Result -->
+            <div id="negotiation-result" class="hidden mb-6">
+                <div id="deal-found" class="hidden p-4 bg-green-50 rounded-xl border-2 border-green-200">
+                    <p class="text-green-700 font-semibold mb-2">✅ Deal Found!</p>
+                    <p class="text-green-600 text-sm" id="deal-details"></p>
+                </div>
+                <div id="no-deal" class="hidden p-4 bg-red-50 rounded-xl border-2 border-red-200">
+                    <p class="text-red-700 font-semibold mb-2">❌ No Acceptable Deals Found</p>
+                    <p class="text-red-600 text-sm">Try adjusting your budget or preferences.</p>
+                </div>
+                <button onclick="proceedToPayment()" id="proceed-payment-btn" class="hidden w-full mt-4 bg-gradient-to-r from-pink-400 to-rose-400 text-white font-semibold py-3 rounded-lg hover:from-pink-500 hover:to-rose-500 transition-all duration-200 shadow-md hover:shadow-lg">
+                    Proceed to Payment
+                </button>
+            </div>
+        </section>
+
+        <!-- Payment Section -->
+        <section id="payment-section" class="step-section hidden bg-white rounded-2xl shadow-lg p-8 border-2 border-pink-200">
+            <button onclick="goBackFromPayment()" class="mb-4 text-pink-600 hover:text-pink-700 text-sm font-medium flex items-center gap-1">
+                ← Back
+            </button>
+            <div class="text-center mb-6">
+                <h2 class="text-3xl font-bold text-pink-600 mb-2">💳 Payment Portal</h2>
+                <p class="text-pink-500">Complete your event registration</p>
+            </div>
+
+            <div class="space-y-4">
+                <div class="p-4 bg-pink-50 rounded-xl border border-pink-200 mb-4">
+                    <div class="flex justify-between mb-2">
+                        <span class="text-pink-700 font-medium">Event:</span>
+                        <span class="text-pink-600" id="payment-event-name">NYC Social Event</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-pink-700 font-medium">Price:</span>
+                        <span class="text-pink-600 font-semibold" id="payment-price">$20</span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">Name</label>
+                    <input type="text" id="payment-name" placeholder="Your name" 
+                           class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-pink-700 mb-2">Card Number</label>
+                    <input type="text" id="payment-card" placeholder="1234 5678 9012 3456" maxlength="19"
+                           class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-pink-700 mb-2">Expiration Date</label>
+                        <input type="text" id="payment-expiry" placeholder="MM/YY" maxlength="5"
+                               class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-pink-700 mb-2">CVV</label>
+                        <input type="text" id="payment-cvv" placeholder="123" maxlength="4"
+                               class="w-full px-4 py-3 rounded-lg border-2 border-pink-200 focus:border-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-300 text-pink-800">
+                    </div>
+                </div>
+
+                <div id="payment-message" class="hidden"></div>
+
+                <button onclick="processPayment()" id="payment-submit-btn"
+                        class="w-full bg-gradient-to-r from-pink-400 to-rose-400 text-white font-semibold py-3 rounded-lg hover:from-pink-500 hover:to-rose-500 transition-all duration-200 shadow-md hover:shadow-lg">
+                    Complete Payment
+                </button>
+            </div>
+        </section>
+        
+        <!-- Model Routing Strategy Page -->
+        <section id="step-model-routing" class="step-section hidden bg-white rounded-2xl shadow-lg p-8 border-2 border-blue-200">
+            <button onclick="goBack()" class="mb-4 text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1">
+                ← Back
+            </button>
+            <div class="text-center mb-6">
+                <h2 class="text-3xl font-bold text-blue-600 mb-2">🔧 AI Model Routing Strategy</h2>
+                <p class="text-blue-500">How we use different free AI models for different tasks</p>
+            </div>
+            
+            <div class="space-y-6">
+                <div class="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200">
+                    <h3 class="text-xl font-semibold text-blue-700 mb-3">🤖 DeepSeek (deepseek/deepseek-chat)</h3>
+                    <ul class="space-y-2 text-blue-600">
+                        <li>✅ Profile generation & analysis</li>
+                        <li>✅ Date idea generation</li>
+                        <li>✅ Financial compatibility analysis</li>
+                        <li>✅ Negotiation reasoning (buyer/seller agents)</li>
+                        <li>✅ Dialog generation (conversation starters)</li>
+                        <li>✅ AI assistant responses</li>
+                    </ul>
+                    <p class="mt-3 text-sm text-blue-500">Used for: Complex reasoning, analysis, and creative generation</p>
+                </div>
+                
+                <div class="p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border-2 border-purple-200">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">🦙 Llama (meta-llama/llama-3-8b-instruct)</h3>
+                    <ul class="space-y-2 text-purple-600">
+                        <li>✅ Conversation tone analysis</li>
+                        <li>✅ Chemistry detection</li>
+                        <li>✅ Emotional vibe scoring</li>
+                    </ul>
+                    <p class="mt-3 text-sm text-purple-500">Used for: Tone analysis and emotional understanding</p>
+                </div>
+                
+                <div class="p-6 bg-gradient-to-r from-green-50 to-teal-50 rounded-xl border-2 border-green-200">
+                    <h3 class="text-xl font-semibold text-green-700 mb-3">🌊 Mixtral (mistralai/mixtral-8x7b-instruct)</h3>
+                    <ul class="space-y-2 text-green-600">
+                        <li>✅ Match explanation (shared interests)</li>
+                        <li>✅ Conflict resolution tips</li>
+                        <li>✅ Relationship compatibility insights</li>
+                    </ul>
+                    <p class="mt-3 text-sm text-green-500">Used for: Relationship insights and conflict resolution</p>
+                </div>
+                
+                <div class="p-6 bg-gradient-to-r from-orange-50 to-yellow-50 rounded-xl border-2 border-orange-200">
+                    <h3 class="text-xl font-semibold text-orange-700 mb-3">💎 Gemini Nano (google/gemini-nano)</h3>
+                    <ul class="space-y-2 text-orange-600">
+                        <li>✅ Summarizing long responses</li>
+                        <li>✅ Rewriting bios</li>
+                        <li>✅ Text optimization</li>
+                    </ul>
+                    <p class="mt-3 text-sm text-orange-500">Used for: Text processing and summarization</p>
+                </div>
+                
+                <div class="p-6 bg-gradient-to-r from-gray-50 to-slate-50 rounded-xl border-2 border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2">Why This Strategy?</h3>
+                    <p class="text-gray-600 text-sm">Each model has strengths. We route tasks to the model best suited for the job, ensuring optimal performance while using only free models.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
